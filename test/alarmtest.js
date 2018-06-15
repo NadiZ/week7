@@ -9,11 +9,12 @@ it('Testing buying tokens', async () => {
 		const funding = web3.toWei(0.001,'ether');
 
 		await alarm.buyToken({from: userAddress, value: funding});
-		console.log(alarm.balanceOf.call(userAddress,{from: userAddress}));
 
-        assert.equal(alarm.balanceOf(userAddress).toString(), 1);//expected '[object Promise]' to equal 1 - не понятно, где ошибка
+		userBalance = parseFloat(await alarm.balanceOf(userAddress,{from: userAddress}));
+        console.log(userBalance);
+        assert.equal(userBalance, 1);
+        });
 
-		});
 
 it('Testing setting alarm', async () => {
 

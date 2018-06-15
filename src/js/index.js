@@ -3,18 +3,29 @@ const MyContract = web3.eth.contract([ { "anonymous": false, "inputs": [ { "inde
 contractInstance = MyContract.at("0x6A7017419870D7C57169b08D893814DC28c0BE68");
 
 
-function changeTime() {
+function setTime() {
   Year = $("#inputYear").val();
   Month = $("#inputMonth").val();
   Day = $("#inputMDay").val();
   Hour = $("#inputHour").val();
   Minute = $("#inputMinute").val();
-  contractInstance.setAlarm(Year, Month, Day, Hour, Minute, 0,  {from: web3.eth.accounts[0]});
+  contractInstance.setAlarm(Year, Month, Day, Hour, Minute, 0,  {from: web3.eth.accounts[0]},function(err, res){console.log(res)});
+}
+
+function currentSetting(){
+let setting = contractInstance.mySetting({from: web3.eth.accounts[0]},function(err, res){console.log(res)});
+document.getElementById("currentSetting").innerHTML = setting;
 }
 
 function getTask(){
-let sentTask = contractInstance.taskSend({from: web3.eth.accounts[0]});
+let sentTask = contractInstance.taskSend({from: web3.eth.accounts[0]},function(err, res){console.log(res)});
 document.getElementById("task").innerHTML = sendTask;
+}
+
+function sendAnswer(){
+  answer = $("#inputAnswer").val();
+  let result = contractInstance.taskAnswer(answer, {from: web3.eth.accounts[0]},function(err, res){console.log(res)});
+  document.getElementById("yourResult").innerHTML = result;
 }
 
 $(document).ready(function() {
