@@ -33,7 +33,7 @@ contract Alarm is MintableToken, DateTime{
     function setAlarm(uint16 year, uint8 month, uint8 day, uint8 hour, uint8 minute, uint8 second) public payable{
         require(balanceOf(msg.sender) >= 1);
         wakeUpTime[msg.sender] = toTimestamp(year, month, day, hour, minute, second);
-        transferFrom(msg.sender, address(0), 1);
+        Transfer(msg.sender, address(0), 1);
     }
 
    function taskRequest() public returns(string) {
