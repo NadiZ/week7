@@ -1,11 +1,13 @@
 pragma solidity ^0.4.20;
 
+
 import "zeppelin-solidity/contracts/token/ERC20/BurnableToken.sol";
 import "./DateTime.sol";
 import "./Token.sol";
 
 
 contract Alarm is DateTime{
+    Token token;
 
     address public owner;
     address public tokenAddress;
@@ -18,13 +20,17 @@ contract Alarm is DateTime{
 
     constructor() public {
         owner = msg.sender;
-        Token token = new Token();
+        token = new Token();
         tokenAddress = address(token);
     }
 
     modifier onlyOwner {
         require(msg.sender == owner);
         _;
+    }
+
+    function getAddress() public view returns(address) {
+        return tokenAddress;
     }
 
 
@@ -37,10 +43,10 @@ contract Alarm is DateTime{
     function setAlarm(uint16 year, uint8 month, uint8 day, uint8 hour, uint8 minute, uint8 second) public payable{
         require(token.balanceOf(msg.sender) >= 1);
         wakeUpTime[msg.sender] = toTimestamp(year, month, day, hour, minute, second);
-        token.Transfer(msg.sender, address(0), 1);
+        token.transferFrom(msg.sender, address(0), 1);
     }
 
-   function taskRequest() public returns(string) {
+   function taskRequest() public view returns(string) {
         if ((now <= wakeUpTime[msg.sender] && wakeUpTime[msg.sender] - now <= 0 ) || (now > wakeUpTime[msg.sender] && now - wakeUpTime[msg.sender] <= 0 ) ){
             taskSend();
         } else {
@@ -48,7 +54,7 @@ contract Alarm is DateTime{
         }
     }
 
-    function taskSend() public returns (string) {
+    function taskSend() public view returns (string) {
         return task;
     }
 
@@ -61,7 +67,7 @@ contract Alarm is DateTime{
         }
     }
 
-    function mySetting() public returns (uint){
+    function mySetting() public view returns (uint){
         return wakeUpTime[msg.sender];
     }
 
