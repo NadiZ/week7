@@ -15,6 +15,7 @@ contract Alarm is DateTime{
     string task = "1 + 2 = ";
     uint rightAnswer = 3;
     string sorry = "sorry, your token burned";
+    string great = "great, your answer is right";
 
     mapping(address => uint) public wakeUpTime;
 
@@ -43,7 +44,7 @@ contract Alarm is DateTime{
     function setAlarm(uint16 year, uint8 month, uint8 day, uint8 hour, uint8 minute, uint8 second) public payable{
         require(token.balanceOf(msg.sender) >= 1);
         wakeUpTime[msg.sender] = toTimestamp(year, month, day, hour, minute, second);
-        token.transferFrom(msg.sender, address(0), 1);
+        token.transfer(this, 1);
     }
 
    function taskRequest() public view returns(string) {
@@ -61,7 +62,7 @@ contract Alarm is DateTime{
     function taskAnswer(uint answer) public returns(string) {
         if (answer == rightAnswer) {
             token.transfer(msg.sender, 1);
-            return "great!";
+            return great;
         } else {
             return sorry;
         }
